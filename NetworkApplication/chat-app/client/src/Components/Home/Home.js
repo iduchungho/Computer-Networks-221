@@ -17,8 +17,8 @@ const Home = () => {
     return (
         <Container className = "h-100 mt-5">
             <Row className = "d-flex flex-column align-items-center justify-content-center">
-            <Button onClick={loginPage} className = "w-25 mt-3"variant="primary">Register</Button>{' '}
-            <Button onClick = {registerPage}className = "w-25 mt-3" variant="primary">Login</Button>{' '}
+            <Button onClick={registerPage} className = "w-25 mt-3"variant="primary">Register</Button>{' '}
+            <Button onClick = {loginPage}className = "w-25 mt-3" variant="primary">Login</Button>{' '}
             </Row>
         </Container>
     );
