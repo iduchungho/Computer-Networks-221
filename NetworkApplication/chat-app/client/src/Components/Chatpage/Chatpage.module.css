@@ -1,0 +1,27 @@
+.sidebar {
+    /* right border light */
+    border-right: 1px solid #e6e6e6;
+    /* background color */
+    background-color: #f5f5f5;
+}
+.chatContent {
+    /* Height : 90% */
+    height: 88%;
+}
+.sendBtn {
+    margin-left : 10px;
+}
+.chatInput {
+    /* Height : 10% */
+    height: 7%;
+}
+.chatInfo {
+    /* background color */
+    height: 5%;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    border-bottom: 1px solid #e6e6e6;
+
+}
+/* Hide search when mobile */
