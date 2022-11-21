@@ -17,7 +17,8 @@
         "prisma:generate": "npx prisma generate",
         "prepare": "npx prisma generate",
         "start": "node build/index.js",
-        "postinstall": "tsc"
+        "postinstall": "tsc",
+        "studio" : "npx prisma studio"
     },
     "dependencies": {
         "@prisma/client": "^4.5.0",

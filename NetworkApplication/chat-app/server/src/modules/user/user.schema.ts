@@ -29,6 +29,17 @@ export const registerUserSchema = z.object({
 export const loginUserSchema = z.object({
     ...userCore,
 })
-
+export const friendIdSchema = z.object({
+    friendId : z.string({
+        required_error: 'Friend Id is required',
+    }),
+});
+export const friendNameSchema = z.object({
+    friendName : z.string({
+        required_error: 'Friend Name is required',
+    }),
+});
 export type RegisterUserInput = z.infer<typeof registerUserSchema>;
 export type LoginUserInput = z.infer<typeof loginUserSchema>;
+export type FriendIdInput = z.infer<typeof friendIdSchema>;
+export type FriendNameInput = z.infer<typeof friendNameSchema>;
