@@ -11,15 +11,19 @@ import serverURL from '../../config/config';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import getMe from '../../utils/getMe';
-const Sidebar = () => {
+import { getFriendList, getMe, search } from '../../utils/user.utils';
+const Sidebar = (props) => {
+    const [user, setUser] = useState(null);
+    const [friendList, setFriendList] = useState([]);
+    const [friendName, setFriendName] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
     const navigate = useNavigate();
     const handleLogout = async () => {
         try {
-            const {data} = await axios.get(`${serverURL}/api/users/logout`,{
+            await axios.get(`${serverURL}/api/users/logout`, {
                 headers: {
-                    'Authorization' : `Bearer ${localStorage.getItem("accessToken")}`,
-                    'x-refresh' : `${localStorage.getItem("refreshToken")}`
+                    'Authorization': `Bearer ${localStorage.getItem("accessToken")}`,
+                    'x-refresh': `${localStorage.getItem("refreshToken")}`
                 }
             });
             localStorage.removeItem("accessToken");
@@ -30,85 +34,40 @@ const Sidebar = () => {
             alert(err.response.data);
         }
     }
-    const [user,setUser] = useState(null);
+    const handleClickOnFriend = async (friend) => {
+
+        props.onClickOnFriendName(friend);
+    }
     useEffect(() => {
         getMe().then((data) => {
             setUser(data);
         })
-        .catch((err) => {
+            .catch((err) => {
+                alert(err.response.data);
+            })
+        getFriendList().then((data) => {
+            setFriendList(data);
+        }).catch((err) => {
             alert(err.response.data);
         })
-    },[])
+    }, [])
     return (
         <Container className="h-100">
             <Row>
                 <h1>Chats</h1>
-                <Form className="d-flex p-0">
-                    <Form.Control
-                        type="search"
-                        placeholder="Search"
-                        aria-label="Search"
-                    />
-                </Form>
             </Row>
             <Row className={clsx(styles.listFriendContainer)}>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-
-                                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
-
-                                <Card className = {clsx(styles.friendContainer)}>
-                    <Card.Body className = {clsx(styles.friendContainer)}>Tri Van</Card.Body>
-                </Card>
+                {friendList.map((friend) => {
+                    return (
+                        <Card key={friend.id} className={clsx(styles.friendContainer)} onClick = {() => handleClickOnFriend(friend)}>
+                            <Card.Body className={clsx(styles.friendContainer)}>{friend.username}</Card.Body>
+                        </Card>
+                    )
+                })}
             </Row>
             <Row>
                 <div className={clsx(styles.username)}>Hi, {user?.username}</div>
-                <Button variant="primary" onClick = {handleLogout}>Logout</Button>
+                <Button variant="primary" onClick={handleLogout}>Logout</Button>
             </Row>
         </Container>
     );

@@ -9,6 +9,7 @@ import  serverURL  from "./config/config";
 import { useLocation } from 'react-router-dom';
 import Chatpage from "./Components/Chatpage/Chatpage";
 import PrivateRoutes from "./utils/privateRoutes";
+import Error from "./Components/Error/Error";
 
 // const socket = io(serverURL);
 function App(props) {
@@ -24,6 +25,7 @@ function App(props) {
                 <Route element = {<PrivateRoutes/>}>
                     <Route path="/chatpage" element={<Chatpage/>}/>
                 </Route>
+                <Route path='/*' element={<Error/>}/>
             </Routes>
         </>
     )

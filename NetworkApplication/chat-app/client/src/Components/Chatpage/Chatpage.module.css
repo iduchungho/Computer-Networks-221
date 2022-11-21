@@ -4,6 +4,12 @@
     /* background color */
     background-color: #fff;
 }
+.friendBar {
+    /* right border light */
+    border-left: 1px solid #e6e6e6;
+    /* background color */
+    background-color: #fff;
+}
 .chatContent {
     /* Height : 90% */
     height: 88%;
@@ -24,4 +30,9 @@
     border-bottom: 1px solid #e6e6e6;
 
 }
-/* Hide search when mobile */
+/* Select friend to chat text */
+.selectFriendToChat {
+    font-size: large;
+    font-weight: 600;
+    justify-content: center;
+}

@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import serverURL from "../../config/config";
-import getMe from "../../utils/getMe";
+import {getMe} from "../../utils/user.utils";
 
 
 const Login = () => {
