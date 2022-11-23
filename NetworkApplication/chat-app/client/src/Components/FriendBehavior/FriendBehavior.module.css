@@ -19,5 +19,10 @@
 .addFriendBtn {
     width: 33%;
     height: 95%;
-
+}
+.modalBtn {
+    width : 20%;
+    height: 95%;
+    margin-left: 10px;
+    margin-right: 10px;
 }

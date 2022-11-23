@@ -2,6 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
+import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import clsx from 'clsx';
 import Card from 'react-bootstrap/Card';
@@ -11,12 +12,16 @@ import serverURL from '../../config/config';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { getFriendList, getMe, search } from '../../utils/user.utils';
+import { deleteFriend, getFriendList, getMe, search } from '../../utils/user.utils';
 const Sidebar = (props) => {
     const [user, setUser] = useState(null);
     const [friendList, setFriendList] = useState([]);
     const [friendName, setFriendName] = useState("");
     const [suggestions, setSuggestions] = useState([]);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const navigate = useNavigate();
     const handleLogout = async () => {
         try {
@@ -32,6 +37,18 @@ const Sidebar = (props) => {
         }
         catch (err) {
             alert(err.response.data);
+        }
+    }
+    const handleDelete = async (friendId) => {
+        console.log(friendId);
+        const result = await deleteFriend(friendId);
+        if (result.success) {
+            alert("Friend deleted successfully");
+            // reload window
+            window.location.reload(false);
+        }
+        else {
+            alert(`${result.message}`);
         }
     }
     const handleClickOnFriend = async (friend) => {
@@ -59,8 +76,23 @@ const Sidebar = (props) => {
             <Row className={clsx(styles.listFriendContainer)}>
                 {friendList.map((friend) => {
                     return (
-                        <Card key={friend.id} className={clsx(styles.friendContainer)} onClick = {() => handleClickOnFriend(friend)}>
+                        <Card key={friend.id} className={clsx(styles.friendContainer)} onClick={() => handleClickOnFriend(friend)}>
                             <Card.Body className={clsx(styles.friendContainer)}>{friend.username}</Card.Body>
+                            <Button onClick = {handleShow} className={clsx(styles.deleteBtn)} variant="danger">Delete</Button>{' '}
+                            <Modal show={show} onHide={handleClose}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Warning</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>Do you want to delete your friend ?</Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleClose}>
+                                        Close
+                                    </Button>
+                                    <Button variant="danger" onClick={() => handleDelete(friend.id)}>
+                                        Save Changes
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
                         </Card>
                     )
                 })}

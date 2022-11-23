@@ -50,9 +50,14 @@ const Chatpage = () => {
                         </Col>
                     </>
                     :
-                    <Col xs={10} className={clsx("d-flex", "align-items-center", styles.selectFriendToChat)}>
-                        Select a friend to chat
-                    </Col>
+                    <>
+                        <Col xs={8} className={clsx("d-flex", "align-items-center", styles.selectFriendToChat)}>
+                            Select a friend to chat
+                        </Col>
+                        <Col xs={2} className={styles.friendBar}>
+                            <FriendBehavior/>
+                        </Col>
+                    </>
                 }
             </Row>
         </Container>
