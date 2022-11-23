@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from "express";
 import { FriendIdInput, FriendNameInput, LoginUserInput, RegisterUserInput } from "./user.schema";
-import { acceptFriendService, deleteFriendService, getFriendsService, loginService, registerService, rejectFriendService, requestFriendService, searchFriendsService } from "./user.service";
+import { acceptFriendService, deleteFriendService, getFriendsService, getPendingRequestService, loginService, registerService, rejectFriendService, requestFriendService, searchFriendsService } from "./user.service";
 import { signJwt } from '../../utils/jwt.utils';
 
 export const registerController = async (req: Request<{},{},RegisterUserInput>, res: Response) => {
@@ -40,7 +40,8 @@ export const logoutController = async (req: Request, res: Response) => {
 }
 export const searchFriendsController = async (req: Request<{},{},{},FriendNameInput>, res: Response) => {
     const {friendName} = req.query;
-    const friends = await searchFriendsService(friendName);
+    const {id} = res.locals.user;
+    const friends = await searchFriendsService(friendName,id);
     // exclude the current user from the list of friends
     const filteredFriends = friends.filter(friend => friend.id !== res.locals.user.id);
     return res.status(StatusCodes.OK).send(filteredFriends);
@@ -72,4 +73,9 @@ export const deleteFriendController = async (req: Request<FriendIdInput,{},{}>, 
     const {id} = res.locals.user;
     const request = await deleteFriendService(id, friendId);
     return res.status(StatusCodes.OK).send(request);
+}
+export const getPendingRequestsController = async (req: Request, res: Response) => {
+    const {id} = res.locals.user;
+    const requests = await getPendingRequestService(id);
+    return res.status(StatusCodes.OK).send(requests);
 }

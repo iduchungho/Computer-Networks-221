@@ -47,7 +47,7 @@ export const loginService = async (input : LoginUserInput) => {
     }
     return null;
 }
-export const searchFriendsService = async (friendName : string) => {
+export const searchFriendsService = async (friendName : string, userId : string) => {
     const friends = await prisma.user.findMany({
         where : {
             username : {
@@ -61,7 +61,13 @@ export const searchFriendsService = async (friendName : string) => {
             email : true,
         }
     });
-    return friends;
+    // exclude connect friend 
+    const connectedFriends = await getFriendsService(userId);
+    const filteredFriends = friends.filter(friend => {
+        const isFriend = connectedFriends.find(connectedFriend => connectedFriend?.id === friend.id);
+        return !isFriend;
+    });
+    return filteredFriends;
 }
 
 export const getFriendsIdSupport = async (userId : string) => {
@@ -235,10 +241,27 @@ export const deleteFriendService = async (userId : string, friendId : string) =>
 
 export const getFriendsService = async (userId : string) => {
     const friendsId = await getFriendsIdSupport(userId);
-    const friends =[];
+    const friends : any[] = [];
     for(let i = 0; i < friendsId.length; i++){
         const friend = await getUserById(friendsId[i].friendId);
         friends.push(friend);
     }
     return friends;
+}
+export const getPendingRequestService = async (userId : string) => {
+    const requests = await prisma.friendRequest.findMany({
+        where : {
+            receiverId : userId,
+        },
+        select : {
+            senderId : true,
+        }
+    });
+
+    const senders :any [] = [];
+    for(let i = 0; i < requests.length; i++){
+        const sender = await getUserById(requests[i].senderId);
+        senders.push(sender);
+    }
+    return senders;
 }
