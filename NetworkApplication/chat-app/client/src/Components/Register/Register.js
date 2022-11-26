@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-
+import { memo } from 'react';
 import axios from "axios";
 import serverURL from "../../config/config";
 import { useNavigate } from "react-router-dom";
@@ -61,4 +61,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default memo(Register);

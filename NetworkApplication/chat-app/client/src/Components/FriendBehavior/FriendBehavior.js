@@ -51,16 +51,19 @@ const FriendBehavior = (props) => {
             window.location.reload(false);
         }
         else {
+            handleClose();
             alert(`${result.message}`);
         }
     }
     const rejectFriend = async (request) => {
         const result = await rejectFriendRequest(request.id);
         if (result.success) {
+            handleClose();
             alert("Friend request rejected");
         }
         else {
             alert(`${result.message}`);
+            handleClose();
         }
     }
     return (

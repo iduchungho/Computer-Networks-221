@@ -1,0 +1,19 @@
+.messageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    width: 100%;
+    height: 88%;
+    /* scroll */
+    overflow-y: scroll;
+    max-height: 98vh;
+    flex-wrap: nowrap;  
+}
+
+.message {
+    margin-bottom: 20px;
+    background-color: #eee;
+}

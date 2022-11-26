@@ -169,6 +169,12 @@ export const acceptFriendService = async (userId : string, friendId : string) =>
                 friendId : userId,
             }
         });
+        await prisma.room.create({
+            data : {
+                user1Id : userId,
+                user2Id : friendId,
+            }
+        });
         return {
             success : true,
             message : 'Friend request accepted',
@@ -228,6 +234,28 @@ export const deleteFriendService = async (userId : string, friendId : string) =>
                 id : connectedFriend2.id,
             }
         });
+        // delete room
+        const room = await prisma.room.findFirst({
+            where : {
+                OR : [
+                    {
+                        user1Id : userId,
+                        user2Id : friendId,
+                    },
+                    {
+                        user1Id : friendId,
+                        user2Id : userId,
+                    }
+                ]
+            }
+        });
+        if(room){
+            await prisma.room.delete({
+                where : {
+                    id : room.id,
+                }
+            });
+        }
         return {
             success : true,
             message : 'Friend deleted',
@@ -238,12 +266,41 @@ export const deleteFriendService = async (userId : string, friendId : string) =>
         message : 'Friend not found',
     };
 }
-
+const getFriendById = async (userId : string, friendId : string) => {
+    const friend = await prisma.user.findUnique({
+        where : {
+            id : friendId,
+        },
+        select : {
+            id : true,
+            username : true,
+            email : true,
+        }
+    });
+    const room = await prisma.room.findFirst({
+        where : {
+            OR : [
+                {
+                    user1Id : userId,
+                    user2Id : friendId,
+                },
+                {
+                    user1Id : friendId,
+                    user2Id : userId,
+                }
+            ]
+        }
+    });
+    return {
+        ...friend,
+        roomId : room?.id,
+    }
+}
 export const getFriendsService = async (userId : string) => {
     const friendsId = await getFriendsIdSupport(userId);
     const friends : any[] = [];
     for(let i = 0; i < friendsId.length; i++){
-        const friend = await getUserById(friendsId[i].friendId);
+        const friend = await getFriendById(userId,friendsId[i].friendId);
         friends.push(friend);
     }
     return friends;

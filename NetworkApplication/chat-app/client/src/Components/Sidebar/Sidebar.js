@@ -12,12 +12,12 @@ import serverURL from '../../config/config';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { deleteFriend, getFriendList, getMe, search } from '../../utils/user.utils';
-const Sidebar = (props) => {
+import { memo } from 'react';
+
+import { deleteFriend, getFriendList, getMe } from '../../utils/user.utils';
+const Sidebar = ({onClickOnFriendName, socket}) => {
     const [user, setUser] = useState(null);
     const [friendList, setFriendList] = useState([]);
-    const [friendName, setFriendName] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -43,7 +43,9 @@ const Sidebar = (props) => {
         console.log(friendId);
         const result = await deleteFriend(friendId);
         if (result.success) {
-            alert("Friend deleted successfully");
+            const newFriendList = friendList.filter((friend) => friend.id !== friendId);
+            setFriendList(newFriendList);
+            handleClose();
             // reload window
             window.location.reload(false);
         }
@@ -52,16 +54,15 @@ const Sidebar = (props) => {
         }
     }
     const handleClickOnFriend = async (friend) => {
-
-        props.onClickOnFriendName(friend);
+        onClickOnFriendName(friend);
     }
     useEffect(() => {
         getMe().then((data) => {
             setUser(data);
+        }).catch((err) => {
+            alert(err.response.data);
         })
-            .catch((err) => {
-                alert(err.response.data);
-            })
+        
         getFriendList().then((data) => {
             setFriendList(data);
         }).catch((err) => {
@@ -76,7 +77,11 @@ const Sidebar = (props) => {
             <Row className={clsx(styles.listFriendContainer)}>
                 {friendList.map((friend) => {
                     return (
-                        <Card key={friend.id} className={clsx(styles.friendContainer)} onClick={() => handleClickOnFriend(friend)}>
+                        <Card key={friend.id} className={clsx(styles.friendContainer)} onClick={() => {
+                                handleClickOnFriend(friend);
+                                navigate('/chatpage/' + friend.roomId);
+                                socket.emit("join-room", friend.roomId);
+                            }}>
                             <Card.Body className={clsx(styles.friendContainer)}>{friend.username}</Card.Body>
                             <Button onClick = {handleShow} className={clsx(styles.deleteBtn)} variant="danger">Delete</Button>{' '}
                             <Modal show={show} onHide={handleClose}>
@@ -105,4 +110,4 @@ const Sidebar = (props) => {
     );
 }
 
-export default Sidebar;
+export default memo(Sidebar);

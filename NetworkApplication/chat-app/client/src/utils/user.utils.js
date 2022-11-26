@@ -124,3 +124,18 @@ export const deleteFriend = async (friendId) => {
         alert(err.response.data);
     }
 }
+export const getRoom = async (roomId) => {
+    //{{tsHost}}/api/rooms/getRoom/6379adaa24393f064fdefa4b
+    try {
+        const {data} = await axios.get(`${serverURL}/api/rooms/${roomId}`, {
+            headers: {
+                'Authorization' : `Bearer ${localStorage.getItem("accessToken")}`,
+                'x-refresh' : `${localStorage.getItem("refreshToken")}`,
+            }
+        })
+        return data;
+    }
+    catch (err) {
+        alert(err.response.data);
+    }
+}
