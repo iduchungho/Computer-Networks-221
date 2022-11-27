@@ -1,0 +1,17 @@
+.videoContainer { 
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+    margin: 0;
+}
+.callBtn {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.video {
+    width: 100%;
+    height: 90%;
+}

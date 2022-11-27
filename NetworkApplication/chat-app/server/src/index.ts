@@ -60,13 +60,15 @@ app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => 
 io.on('connection', (socket: Socket) => {
     logger.info(`Client connected: ${socket.id}`);
     socket.on('join-room', (roomId) => {
+        // join new room
         socket.join(roomId);
     }); 
     socket.on('send-message', async (data) => {
         const {roomId, sender, message} = data;
         const result = await addMessageService(roomId, sender.id, message);
+        console.log(result);
         if(result) {
-            io.to(roomId).emit('receive-message', result);
+            io.to(roomId).emit('receive-message', result.data);
         }
     })
     socket.on('disconnect', () => {

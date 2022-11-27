@@ -69,7 +69,7 @@ const FriendBehavior = (props) => {
     return (
         <Container className="h-100">
             <Row>
-                <h1>Find friends</h1>
+                <h2>Find friends</h2>
                 <Form className="d-flex p-0" onSubmit={handleSubmit}>
                     <Form.Control
                         type="search"
@@ -85,7 +85,7 @@ const FriendBehavior = (props) => {
                         return (
                             <Card key={suggestion.id} className={clsx(styles.suggestionContainer, "mt-2")}>
                                 <Card.Body>{suggestion.username}</Card.Body>
-                                <Button onClick={() => sendFriendRequest(suggestion)} className={clsx(styles.addFriendBtn)} variant="success">Add friend</Button>{' '}
+                                <Button onClick={() => sendFriendRequest(suggestion)} className={clsx(styles.addFriendBtn)} variant="success">Add</Button>{' '}
                             </Card>
                         )
                     }

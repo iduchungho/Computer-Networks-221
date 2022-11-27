@@ -12,6 +12,7 @@ import PrivateRoutes from "./utils/privateRoutes";
 import Error from "./Components/Error/Error";
 import { memo } from 'react';
 import RoomPage from "./Components/RoomPage/RoomPage";
+import VideoCall from "./Components/VideoCall/VideoCall";
 
 const socket = io(serverURL);
 function App(props) {
@@ -34,7 +35,7 @@ function App(props) {
     return (
         <>
             {/* Hide header when in chatpage */}
-            {!location.pathname.includes('/chatpage') && <Header />}
+            {(!location.pathname.includes('/chatpage')) && <Header />}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
@@ -44,6 +45,7 @@ function App(props) {
                         <Route path=":roomId" element={<RoomPage socket={socket} friend={friendRoom} styles={stylesRoom} />}>
                         </Route>
                     </Route>
+                    <Route path="/chatpage/videoCall" element = {<VideoCall/>}/>
                 </Route>
                 <Route path='/*' element={<Error />} />
             </Routes>

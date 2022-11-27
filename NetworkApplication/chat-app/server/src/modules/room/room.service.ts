@@ -43,7 +43,12 @@ export const addMessageService = async (roomId : string, userId : string, conten
         },
         select : {
             id : true,
-            userId : true,
+            user : {
+                select : {
+                    id : true,
+                    username : true,
+                }
+            },
             content : true,
             createdAt : true,
         }

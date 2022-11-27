@@ -3,7 +3,7 @@ import { Col, Row, Form, Button } from 'react-bootstrap'
 import clsx from 'clsx'
 import FriendBehavior from '../FriendBehavior/FriendBehavior';
 import messageStyles from './RoomPage.module.css'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getMe, getRoom } from '../../utils/user.utils';
 import { useLayoutEffect } from 'react';
 function RoomPage({ friend, styles , socket}) {
@@ -11,34 +11,32 @@ function RoomPage({ friend, styles , socket}) {
     const [sender, setSender] = useState("");
     const [messages, setMessages] = useState([]);
     const messageContainer = useRef(null);
-    const [isReceiveMessage, setIsReceiveMessage] = useState(true);
+    const navigate = useNavigate();
+    const openInNewTab = url => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
     // get room Id by use params
     const { roomId } = useParams();
-    useEffect(() => {
+    useEffect(()=>{
         getMe().then((data) => {
             setSender(data);
         }).catch((err) => {
             alert(err.response.data);
         });
+    },[])
+    useEffect(() => {
         getRoom(roomId).then((data) => {
-            console.log(data);
             setMessages(data.messages);
         }).catch((err) => {
             alert(err.response.data);
         })
     }, [roomId]);
-    useLayoutEffect(()=>{
-        messageContainer.current.scrollTop = messageContainer.current.scrollHeight - messageContainer.current.clientHeight
-    },[messages])
     // listen receive message event
     useEffect(() => {
         socket.on("receive-message", (data) => {
-            getRoom(roomId).then((data) => {
-                setMessages(data.messages);
-            }).catch((err) => {
-            })
+            setMessages([...messages, data]);
         })
-    }, [messages, socket, roomId]);
+    },[messages, socket]);
     const handleSendMessage = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -52,13 +50,21 @@ function RoomPage({ friend, styles , socket}) {
     }
     return (
         <>
-            <Col xs={8} className={clsx("ml-3")}>
+            <Col xs={8} className={clsx("ml-3",messageStyles.roomContainer)}>
                 <Row className={clsx(styles.chatInfo)}>
                     <Col xs={10}>
                         {friend ? friend.username : "Select a friend to chat"}
                     </Col>
                     <Col xs={2}>
-                        {friend ? `See ${friend.username}'s video` : ""}
+                        {friend ?
+                            <>
+                                <Button variant="outline-secondary" onClick = {
+                                    ()=>{
+                                        openInNewTab('/chatpage/videoCall');
+                                    }
+                                }>Call video</Button>{' '}
+                            </>
+                        : ""}
                     </Col>
                 </Row>
                 <Row className={clsx(messageStyles.messageContainer)} ref={messageContainer}>
