@@ -32,7 +32,7 @@ function RoomPage({ friend, styles , socket}) {
         })
     }, [roomId]);
     // listen receive message event
-    useEffect(() => {
+    useLayoutEffect(() => {
         socket.on("receive-message", (data) => {
             setMessages([...messages, data]);
         })
@@ -63,7 +63,7 @@ function RoomPage({ friend, styles , socket}) {
                             <>
                                 <Button variant="outline-secondary" onClick = {
                                     ()=>{
-                                        openInNewTab('/chatpage/videoCall');
+                                        openInNewTab(`/chatpage/videoCall/${friend.id}`);
                                     }
                                 }>Call video</Button>{' '}
                             </>

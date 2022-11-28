@@ -2,15 +2,26 @@ import { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
 import styles from './VideoCall.module.css';
 import { Row, Col, Container } from 'react-bootstrap'
+import { useParams } from 'react-router-dom';
+import { getMe } from '../../utils/user.utils';
 function VideoCall() {
     const [peerId, setPeerId] = useState('');
     const [remotePeerIdValue, setRemotePeerIdValue] = useState('');
     const remoteVideoRef = useRef(null);
     const currentUserVideoRef = useRef(null);
     const peerInstance = useRef(null);
-
+    const [user,setUser] = useState(null);
+    const {friendId} = useParams();
+    useEffect(()=>{
+        getMe().then((data) => {
+            setUser(data);
+        }).catch((err) => {
+            alert(err.response.data);
+        });
+        setRemotePeerIdValue(friendId);
+    },[friendId])
     useEffect(() => {
-        const peer = new Peer();
+        const peer = new Peer(user?.id);
         peer.on('open', (id) => {
             setPeerId(id)
         });
@@ -29,7 +40,7 @@ function VideoCall() {
         })
 
         peerInstance.current = peer;
-    }, [])
+    }, [user])
     // Call a remote peer
     const call = (remotePeerId) => {
         var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -47,13 +58,7 @@ function VideoCall() {
     return (
         <Container>
             <Row>
-                <h1>Your id is {peerId}</h1>
-            </Row>
-            <Row>
-                <label htmlFor="">Enter your friend id to call video</label>
-                <br />
-                <input type="text" value={remotePeerIdValue} onChange={e => setRemotePeerIdValue(e.target.value)} />
-                <button className = "mt-3" onClick={() => call(remotePeerIdValue)}>Call</button>
+                <button className = "mt-3" onClick={() => call(remotePeerIdValue)}>Click here to start a call or accept a call</button>
             </Row>
             <Row>
                 <div className={styles.videoContainer}>

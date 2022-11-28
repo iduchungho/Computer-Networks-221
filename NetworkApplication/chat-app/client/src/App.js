@@ -45,7 +45,7 @@ function App(props) {
                         <Route path=":roomId" element={<RoomPage socket={socket} friend={friendRoom} styles={stylesRoom} />}>
                         </Route>
                     </Route>
-                    <Route path="/chatpage/videoCall" element = {<VideoCall/>}/>
+                    <Route path="/chatpage/videoCall/:friendId" element = {<VideoCall friend={friendRoom}/>}/>
                 </Route>
                 <Route path='/*' element={<Error />} />
             </Routes>
