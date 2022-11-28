@@ -55,10 +55,10 @@ function RoomPage({ friend, styles , socket}) {
         <>
             <Col xs={8} className={clsx("ml-3",messageStyles.roomContainer)}>
                 <Row className={clsx(styles.chatInfo)}>
-                    <Col xs={10}>
+                    <Col xs={9}>
                         {friend ? friend.username : "Select a friend to chat"}
                     </Col>
-                    <Col xs={2}>
+                    <Col xs={3}>
                         {friend ?
                             <>
                                 <Button variant="outline-secondary" onClick = {
@@ -66,6 +66,11 @@ function RoomPage({ friend, styles , socket}) {
                                         openInNewTab(`/chatpage/videoCall/${friend.id}`);
                                     }
                                 }>Call video</Button>{' '}
+                                <Button variant="outline-primary" onClick = {
+                                    ()=>{
+                                        openInNewTab(`/chatpage/fileTransfer/${friend.id}`);
+                                    }
+                                }>File transfer</Button>{' '}
                             </>
                         : ""}
                     </Col>

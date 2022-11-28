@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
 import styles from './VideoCall.module.css';
-import { Row, Col, Container } from 'react-bootstrap'
+import { Row, Button, Container } from 'react-bootstrap'
 import { useParams } from 'react-router-dom';
 import { getMe } from '../../utils/user.utils';
+import { memo } from 'react';
 function VideoCall() {
     const [peerId, setPeerId] = useState('');
     const [remotePeerIdValue, setRemotePeerIdValue] = useState('');
@@ -58,7 +59,7 @@ function VideoCall() {
     return (
         <Container>
             <Row>
-                <button className = "mt-3" onClick={() => call(remotePeerIdValue)}>Click here to start a call or accept a call</button>
+                <Button className = "mt-3" onClick={() => call(remotePeerIdValue)}>Click here to start a call or accept a call</Button>
             </Row>
             <Row>
                 <div className={styles.videoContainer}>
@@ -76,4 +77,4 @@ function VideoCall() {
     );
 }
 
-export default VideoCall;
+export default memo(VideoCall);

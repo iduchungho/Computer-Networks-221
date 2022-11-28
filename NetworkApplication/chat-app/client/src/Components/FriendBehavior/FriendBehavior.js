@@ -20,7 +20,7 @@ const FriendBehavior = (props) => {
         const result = await getPendingRequests();
         setPendingRequests(result);
         setNumberRequests(result.length);
-        setShow(true)
+        setShow(true);
     };
     const handleSubmit = async (e) => {
         e.preventDefault();

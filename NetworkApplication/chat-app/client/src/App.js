@@ -13,6 +13,7 @@ import Error from "./Components/Error/Error";
 import { memo } from 'react';
 import RoomPage from "./Components/RoomPage/RoomPage";
 import VideoCall from "./Components/VideoCall/VideoCall";
+import FileTransfer from "./Components/FileTransfer/FileTransfer";
 
 const socket = io(serverURL);
 function App(props) {
@@ -46,6 +47,7 @@ function App(props) {
                         </Route>
                     </Route>
                     <Route path="/chatpage/videoCall/:friendId" element = {<VideoCall friend={friendRoom}/>}/>
+                    <Route path="/chatpage/fileTransfer/:friendId" element = {<FileTransfer friend={friendRoom}/>}/>
                 </Route>
                 <Route path='/*' element={<Error />} />
             </Routes>
