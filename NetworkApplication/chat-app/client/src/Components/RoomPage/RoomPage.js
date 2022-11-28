@@ -7,10 +7,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getMe, getRoom } from '../../utils/user.utils';
 import { useLayoutEffect } from 'react';
 function RoomPage({ friend, styles , socket}) {
+    const messageContainer = useRef(null)
     const [message, setMessage] = useState("");
     const [sender, setSender] = useState("");
     const [messages, setMessages] = useState([]);
-    const messageContainer = useRef(null);
     const navigate = useNavigate();
     const openInNewTab = url => {
         window.open(url, '_blank', 'noopener,noreferrer');
@@ -37,6 +37,9 @@ function RoomPage({ friend, styles , socket}) {
             setMessages([...messages, data]);
         })
     },[messages, socket]);
+    useLayoutEffect(()=>{
+        messageContainer.current.scrollTop = messageContainer.current.scrollHeight - messageContainer.current.clientHeight
+    },[messages]);
     const handleSendMessage = (e) => {
         e.preventDefault();
         e.stopPropagation();
