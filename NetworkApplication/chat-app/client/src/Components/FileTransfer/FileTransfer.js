@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import Peer from 'peerjs';
-import styles from './FileTransfer.module.css';
 import { Row, Col, Container, Form, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom';
 import { getMe } from '../../utils/user.utils';

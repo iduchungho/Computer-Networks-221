@@ -19,13 +19,13 @@ function VideoCall() {
         }).catch((err) => {
             alert(err.response.data);
         });
-        setRemotePeerIdValue(friendId);
-    },[friendId])
+    },[])
     useEffect(() => {
         const peer = new Peer(user?.id);
         peer.on('open', (id) => {
             setPeerId(id)
         });
+        setRemotePeerIdValue(friendId);
         // Await a call from a remote peer
         peer.on('call', (call) => {
             var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -41,7 +41,7 @@ function VideoCall() {
         })
 
         peerInstance.current = peer;
-    }, [user])
+    }, [user,friendId])
     // Call a remote peer
     const call = (remotePeerId) => {
         var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
