@@ -18,7 +18,7 @@
         "prepare": "npx prisma generate",
         "start": "node build/index.js",
         "postinstall": "tsc",
-        "studio" : "npx prisma studio",
+        "studio": "npx prisma studio",
         "resetDB": "npx ts-node ./src/utils/resetDB.ts"
     },
     "dependencies": {
