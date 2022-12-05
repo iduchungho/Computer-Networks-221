@@ -24,7 +24,7 @@ function RoomPage({ friend, styles , socket}) {
             alert(err.response.data);
         });
     },[])
-    useEffect(() => {
+    useLayoutEffect(() => {
         getRoom(roomId).then((data) => {
             setMessages(data.messages);
         }).catch((err) => {
@@ -34,9 +34,11 @@ function RoomPage({ friend, styles , socket}) {
     // listen receive message event
     useLayoutEffect(() => {
         socket.on("receive-message", (data) => {
-            setMessages([...messages, data]);
+            if(data.roomId === roomId){
+                setMessages([...messages, data.data]);
+            }
         })
-    },[messages, socket]);
+    },[messages, socket, roomId]);
     useLayoutEffect(()=>{
         messageContainer.current.scrollTop = messageContainer.current.scrollHeight - messageContainer.current.clientHeight
     },[messages]);
@@ -45,9 +47,6 @@ function RoomPage({ friend, styles , socket}) {
         e.stopPropagation();
         if (message) {
             socket.emit('send-message', { message, sender, roomId ,friend});
-            getRoom(roomId).then((data) => {
-                setMessages(data.messages);
-            })
             setMessage("");
         }
     }

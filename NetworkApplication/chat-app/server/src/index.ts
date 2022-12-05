@@ -66,8 +66,12 @@ io.on('connection', (socket: Socket) => {
     socket.on('send-message', async (data) => {
         const {roomId, sender, message} = data;
         const result = await addMessageService(roomId, sender.id, message);
+        const response = {
+            ...result,
+            roomId,
+        }
         if(result) {
-            io.to(roomId).emit('receive-message', result.data);
+            io.to(roomId).emit('receive-message', response);
         }
     })
     socket.on('disconnect', () => {
