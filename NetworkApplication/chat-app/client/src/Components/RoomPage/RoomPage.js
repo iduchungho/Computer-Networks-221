@@ -15,9 +15,7 @@ function RoomPage({ friend, styles , socket}) {
     const openInNewTab = url => {
         window.open(url, '_blank', 'noopener,noreferrer');
     };
-    const url = location.pathname;
-    const roomId = url.split("/")[2];
-    console.log(roomId);
+    const {roomId} = useParams();
     useEffect(()=>{
         getMe().then((data) => {
             setSender(data);
@@ -26,30 +24,27 @@ function RoomPage({ friend, styles , socket}) {
         });
     },[])
     useLayoutEffect(() => {
+        console.log("hello");
         getRoom(roomId).then((data) => {
             setMessages(data.messages);
         }).catch((err) => {
             alert(err.response.data);
         })
     }, [roomId]);
-    // listen receive message event
-    useLayoutEffect(() => {
-        socket.on("receive-message", (data) => {
-            if (data.roomId === roomId) {
-                setMessages((messages) => [...messages, data.data]);
-            }
+    useEffect(() => {
+        socket.on('receive-message', ({data}) => {
+            console.log(data);
+            setMessages([...messages, data]);
         })
-    },[messages, socket, roomId]);
+    },[socket, messages])
     useLayoutEffect(()=>{
         messageContainer.current.scrollTop = messageContainer.current.scrollHeight - messageContainer.current.clientHeight
     },[messages]);
     const handleSendMessage = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (message) {
-            socket.emit('send-message', { message, sender, roomId ,friend});
-            setMessage("");
-        }
+        socket.emit("send-message",{message, sender,roomId,friend});
+        setMessage("");
     }
     return (
         <>
@@ -80,7 +75,7 @@ function RoomPage({ friend, styles , socket}) {
                         messages.map((message, index) => {
                             return (
                                 <div key={index} className={clsx("card",messageStyles.message)}>
-                                    <div className="card-title">{message.user.username}</div>
+                                    <div className="card-title">{message?.user?.username}</div>
                                     <div className="card-body">
                                         {message.content}
                                     </div>

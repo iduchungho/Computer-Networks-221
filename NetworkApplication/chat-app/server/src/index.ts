@@ -60,10 +60,18 @@ app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => 
 io.on('connection', (socket: Socket) => {
     logger.info(`Client connected: ${socket.id}`);
     socket.on('join-room', (roomId) => {
+        // leave previous room
+        const iterator = socket.rooms[Symbol.iterator]();
+        iterator.next();
+        const socketRoomId = iterator.next().value;
+        socket.leave(socketRoomId);
         // join new room
         socket.join(roomId);
     }); 
     socket.on('send-message', async (data) => {
+        const iterator = socket.rooms[Symbol.iterator]();
+        iterator.next();
+        const socketRoomId = iterator.next().value;
         const {roomId, sender, message} = data;
         const result = await addMessageService(roomId, sender.id, message);
         const response = {
@@ -71,7 +79,7 @@ io.on('connection', (socket: Socket) => {
             roomId,
         }
         if(result) {
-            io.to(roomId).emit('receive-message', response);
+            io.to(socketRoomId).emit('receive-message', response);
         }
     })
     socket.on('disconnect', () => {
