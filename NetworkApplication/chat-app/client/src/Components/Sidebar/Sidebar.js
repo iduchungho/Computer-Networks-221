@@ -47,7 +47,6 @@ const Sidebar = ({ onClickOnFriendName, socket }) => {
         }
     }
     const handleDelete = async (friendId) => {
-        console.log(friendId);
         const result = await deleteFriend(friendId);
         if (result.success) {
             const newFriendList = friendList.filter((friend) => friend.id !== friendId);
@@ -82,9 +81,9 @@ const Sidebar = ({ onClickOnFriendName, socket }) => {
                 <h1>Chats</h1>
             </Row>
             <Row className={clsx(styles.listFriendContainer)}>
-                {friendList.map((friend) => {
+                {friendList.map((friend,index) => {
                     return (
-                        <Card key={friend.id} className={clsx(styles.friendContainer)} onClick={() => {
+                        <Card key={index} className={clsx(styles.friendContainer)} onClick={() => {
                             handleClickOnFriend(friend);
                             navigate('/chatpage/' + friend.roomId);
                             socket.emit("join-room", friend.roomId);

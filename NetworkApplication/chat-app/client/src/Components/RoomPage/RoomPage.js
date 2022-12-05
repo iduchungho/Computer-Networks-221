@@ -3,20 +3,21 @@ import { Col, Row, Form, Button } from 'react-bootstrap'
 import clsx from 'clsx'
 import FriendBehavior from '../FriendBehavior/FriendBehavior';
 import messageStyles from './RoomPage.module.css'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { getMe, getRoom } from '../../utils/user.utils';
 import { useLayoutEffect } from 'react';
 function RoomPage({ friend, styles , socket}) {
+    const location = useLocation();
     const messageContainer = useRef(null)
     const [message, setMessage] = useState("");
     const [sender, setSender] = useState("");
     const [messages, setMessages] = useState([]);
-    const navigate = useNavigate();
     const openInNewTab = url => {
         window.open(url, '_blank', 'noopener,noreferrer');
     };
-    // get room Id by use params
-    const { roomId } = useParams();
+    const url = location.pathname;
+    const roomId = url.split("/")[2];
+    console.log(roomId);
     useEffect(()=>{
         getMe().then((data) => {
             setSender(data);
@@ -34,8 +35,8 @@ function RoomPage({ friend, styles , socket}) {
     // listen receive message event
     useLayoutEffect(() => {
         socket.on("receive-message", (data) => {
-            if(data.roomId === roomId){
-                setMessages([...messages, data.data]);
+            if (data.roomId === roomId) {
+                setMessages((messages) => [...messages, data.data]);
             }
         })
     },[messages, socket, roomId]);
@@ -78,7 +79,7 @@ function RoomPage({ friend, styles , socket}) {
                     {
                         messages.map((message, index) => {
                             return (
-                                <div key={message.id} className={clsx("card",messageStyles.message)}>
+                                <div key={index} className={clsx("card",messageStyles.message)}>
                                     <div className="card-title">{message.user.username}</div>
                                     <div className="card-body">
                                         {message.content}
